@@ -1,0 +1,33 @@
+.index-page-style p{
+    line-height: 1;
+}
+
+.index-page-style a{
+    text-decoration: none;
+}
+
+.index-page-style .base-info hr{
+    color: white;
+}
+
+.index-page-style .base-info a{
+    color: gray;
+}
+
+.index-page-style .base-info a:hover{
+    color:white;
+}
+
+.index-page-style .post-lists a{
+    color: black;
+}
+
+.index-page-style .post-lists a:hover{
+    color: grey;
+}
+
+.index-page-style .post-lists div{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
