@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjdd's Party</title>
+    <link rel="icon" href="/assert/img/group_ico.jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    
+<link rel="stylesheet" href="/extend/bootstrap-5.3.3/css/bootstrap.min.css">
+
+    
+<link rel="stylesheet" href="/extend/highlight/atom-one-dark.css">
+
+    
+<script src="/extend/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+
+    
+<script src="/extend/jQuery/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/extend/jQuery/jquery.pjax.js"></script>
+
+    
+<script src="/extend/highlight/highlight.min.js"></script>
+
+
+    
+<link rel="stylesheet" href="/css/navigator_chapters.css">
+
+
+<link rel="stylesheet" href="/css/contain_main.css">
+
+
+<link rel="stylesheet" href="/css/index_page.css">
+
+    
+<script src="/js/navigator_chapters.js"></script>
+
+
+<script src="/js/navigator_article.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <nav id="nav-main" class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+    <div class="container-fluid">
+        <div class="ml-3">
+            <span class="navbar-brand">Hjdd'sParty</span>
+        </div>
+        <div style="float: right;margin-right: 100px;">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">主页</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">学习分类</a>
+                    <ul class="dropdown-menu">
+                        
+                            <li><a class="dropdown-item" href="/2024/10/04/C++/CQ日记/condition_variable细节/">C++</a></li>
+                        
+                            <li><a class="dropdown-item" href="/2024/10/02/HexoRecording/关于hjdd主题的笔记/">hexo笔记</a></li>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/project_page">个人项目</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="avoid-nav-head" style="position: relative;">
+        <div class="float-fixed-button">
+    <span type="button" data-bs-toggle="offcanvas" data-bs-target="#root-node" aria-controls="root-node">目录</span>
+</div>
+<div id="root-node" class="offcanvas offcanvas-start bg-dark text-white-50 avoid-nav-head" data-bs-scroll="true" data-bs-backdrop="false">
+    <div class="offcanvas-head">
+        <h1>
+            目录
+            <span type="button" style="float: right;" data-bs-dismiss="offcanvas">
+                <i  class="bi bi-x-square-fill"></i>
+            </span>
+        </h1>
+    </div>
+    <div class="offcanvas-body">
+        <div class="navbar-dark">
+            
+            
+            
+            
+                <ul class="navbar-nav">
+                    
+                    <li class="nav-item">
+                    
+                        <a class="collapse-root nav-link collapsed" href="#link-label-0" data-bs-toggle="collapse">CQ日记</a>
+                        <div id="link-label-0" class="collapse" data-bs-parent="#root-node">
+                            
+                            <ul class="navbar-nav">
+                                
+                    <li class="nav-item">
+                    
+                        <a class="nav-link" href="/2024/10/04/C++/CQ日记/condition_variable细节/">condition_variable细节</a>
+                    
+                    </li>
+                
+                    <li class="nav-item">
+                    
+                        <a class="nav-link" href="/2024/10/04/C++/CQ日记/QtTreePropertyBrowser反射/">QtTreePropertyBrowser反射</a>
+                    
+                    </li>
+                
+                            </ul>
+                        </div>
+                    
+                    </li>
+                
+                </ul>
+            
+        </div>
+    </div>
+</div>
+<div class = "container mt-3">
+    <div class="row justify-content-between">
+        <div id="content-main" class="col-sm-8 mx-auto">
+    <div>
+        <h1>condition_variable一些细节</h1>
+        <span>2024-10-04 13:03:39</span>
+    </div>
+    <div id="article">
+        <p>1.调用wait( _Lck, _Pred)如果_Pred返回false,condition_variable会解锁_Lck并阻塞线程</p>
+<p>2.如果其他线程调用notify_one并且被通知的线程条件变量中_Pred返回true,condition_variable会等待锁并加锁继续运行线程。</p>
+<pre><code class="hljs C++">std::mutex mtx;
+std::condition_variable cv;
+<span class="hljs-type">int</span> num = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">thread_local</span> <span class="hljs-type">int</span> times=<span class="hljs-number">0</span>;
+<span class="hljs-function">std::thread <span class="hljs-title">th1</span><span class="hljs-params">([&amp;]() &#123;</span></span>
+<span class="hljs-params"><span class="hljs-function">	std::unique_lock&lt;std::mutex&gt; lck(mtx);</span></span>
+<span class="hljs-params"><span class="hljs-function">	std::cout &lt;&lt; <span class="hljs-string">&quot;th1加锁了\n&quot;</span>;</span></span>
+<span class="hljs-params"><span class="hljs-function">	cv.wait(lck, [&amp;]() &#123;<span class="hljs-keyword">return</span> num == <span class="hljs-number">1</span>; &#125;);</span></span>
+<span class="hljs-params"><span class="hljs-function">	std::cout &lt;&lt; <span class="hljs-string">&quot;th1通过了\n&quot;</span>;</span></span>
+<span class="hljs-params"><span class="hljs-function">	&#125;)</span></span>;
+<span class="hljs-function">std::thread <span class="hljs-title">th2</span><span class="hljs-params">([&amp;]() &#123;</span></span>
+<span class="hljs-params"><span class="hljs-function">	std::unique_lock&lt;std::mutex&gt; lck(mtx);</span></span>
+<span class="hljs-params"><span class="hljs-function">	cv.wait(lck, [&amp;]() &#123;<span class="hljs-keyword">return</span> num == <span class="hljs-number">0</span>; &#125;);</span></span>
+<span class="hljs-params"><span class="hljs-function">	++num;</span></span>
+<span class="hljs-params"><span class="hljs-function">	cv.notify_one();</span></span>
+<span class="hljs-params"><span class="hljs-function">	std::cout &lt;&lt; <span class="hljs-string">&quot;th2通知th1了&quot;</span>;</span></span>
+<span class="hljs-params"><span class="hljs-function">	std::this_thread::sleep_for(std::chrono::seconds(<span class="hljs-number">5</span>));</span></span>
+<span class="hljs-params"><span class="hljs-function">	&#125;)</span></span>;
+ 
+th<span class="hljs-number">2.</span><span class="hljs-built_in">join</span>();
+th<span class="hljs-number">1.</span><span class="hljs-built_in">join</span>();
+
+
+<span class="hljs-comment">/*会输出</span>
+<span class="hljs-comment"> *th1加锁了</span>
+<span class="hljs-comment"> *th2通知th1了</span>
+<span class="hljs-comment"> *等待5秒,此时th2锁住了mtx意味着th1 cv之前解锁了,此时cv在等待锁</span>
+<span class="hljs-comment"> *th1通过了</span>
+<span class="hljs-comment"> */</span></code></pre>
+    </div>
+</div>
+        <div class="article-index-area col-sm-2">
+    <div>
+        <h4>文章简介</h4>
+        <ul class="navbar-nav">
+        </ul>
+    </div>
+</div>
+    </div>
+</div>
+    </div>
+</body>
+</html>
