@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjdd's Party</title>
+    <link rel="icon" href="/assert/img/group_ico.jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    
+<link rel="stylesheet" href="/extend/bootstrap-5.3.3/css/bootstrap.min.css">
+
+    
+<link rel="stylesheet" href="/extend/highlight/atom-one-dark.css">
+
+    
+<script src="/extend/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
+
+    
+<script src="/extend/jQuery/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/extend/jQuery/jquery.pjax.js"></script>
+
+    
+<script src="/extend/highlight/highlight.min.js"></script>
+
+
+    
+<link rel="stylesheet" href="/css/navigator_chapters.css">
+
+
+<link rel="stylesheet" href="/css/contain_main.css">
+
+
+<link rel="stylesheet" href="/css/index_page.css">
+
+    
+<script src="/js/navigator_chapters.js"></script>
+
+
+<script src="/js/navigator_article.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <nav id="nav-main" class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+    <div class="container-fluid">
+        <div class="ml-3">
+            <span class="navbar-brand">Hjdd'sParty</span>
+        </div>
+        <div style="float: right;margin-right: 100px;">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">主页</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">学习分类</a>
+                    <ul class="dropdown-menu">
+                        
+                            <li><a class="dropdown-item" href="/2024/10/06/日常日记/相似矩阵/">日常日记</a></li>
+                        
+                            <li><a class="dropdown-item" href="/2024/10/04/C++/CQ日记/condition_variable细节/">C++</a></li>
+                        
+                            <li><a class="dropdown-item" href="/2024/10/02/HexoRecording/关于hjdd主题的笔记/">hexo笔记</a></li>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/project_page">个人项目</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="avoid-nav-head" style="position: relative;">
+        
+<div>
+    
+    <div class="float-fixed-button">
+        <span type="button" data-bs-toggle="offcanvas" data-bs-target="#root-node" aria-controls="root-node">目录</span>
+    </div>
+    <div id="root-node" class="offcanvas offcanvas-start bg-dark text-white-50 avoid-nav-head" data-bs-scroll="true" data-bs-backdrop="false">
+        <div class="offcanvas-head">
+            <h1>
+                目录
+                <span type="button" style="float: right;" data-bs-dismiss="offcanvas">
+                    <i  class="bi bi-x-square-fill"></i>
+                </span>
+            </h1>
+        </div>
+        <div class="offcanvas-body">
+            <div class="navbar-dark">
+                <ul class="navbar-nav">
+                    
+        <li class="nav-item">
+            
+                <a class="collapse-root nav-link collapsed" href="#link-label-0" data-bs-toggle="collapse">Js控件说明</a>
+                <div id="link-label-0" class="collapse" data-bs-parent="#root-node">
+                    
+                    <ul class="navbar-nav">
+                        
+        <li class="nav-item">
+            
+                <a class="nav-link" href="/project_page/RpgMakerMVUI/Js%E6%8E%A7%E4%BB%B6%E8%AF%B4%E6%98%8E/CoordIntroduction.html">控件坐标说明</a>
+            
+        </li>
+     
+        <li class="nav-item">
+            
+                <a class="nav-link" href="/project_page/RpgMakerMVUI/Js%E6%8E%A7%E4%BB%B6%E8%AF%B4%E6%98%8E/BaseCtrlSimpleUse.html">控件的基础用法</a>
+            
+        </li>
+     
+                    </ul>
+                </div>
+            
+        </li>
+     
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="row justify-content-between">
+                <div id="content-main" class="col-sm-8 mx-auto">
+    <div>
+        <h1>控件的基础用法</h1>
+        <span>2024-11-13 23:08:35</span>
+    </div>
+    <div id="article">
+        <h1>抽象类IObjectExtend</h1>
+
+<p>该类被所有基本控件继承包含主要作用是修改控件坐标原点为中心</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">//基本方法说明</span>
+<span class="hljs-comment">/*该方法替代原来的addChild和addWindow，去除了Window_Layer</span>
+<span class="hljs-comment">* 可以将所有子物体改为视父物体的中心为原点</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">addObject</span>(hjdd.<span class="hljs-property">xxx</span>)
+
+<span class="hljs-comment">/*该方法替代原来的move</span>
+<span class="hljs-comment">* 作用和原因同上</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">moveSelf</span>(x,y)
+
+<span class="hljs-comment">/*移到一个子物体</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">moveChild</span>(child,x,y)
+
+<span class="hljs-comment">/*该方法把子物体坐标系上的(lx,ly)转化为父物体坐标系上的点</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">mapToParent</span>(lx,ly)
+
+<span class="hljs-comment">/*该方法把物体坐标系上的(lx,ly)转化为子物体(child)坐标系上的点</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">mapToChild</span>(child,lx,ly)
+<span class="hljs-title function_">mapFromParent</span>(lx,ly)
+
+<span class="hljs-comment">/*有anchor的(PIXI.Sprite)返回false，</span>
+<span class="hljs-comment">* 没有的返回true，可以保证所有变换都以物体中心为原点</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">needToSelfCoord</span>();
+
+<span class="hljs-comment">/*捕捉物体上(x,y)能点中的最深层子物体</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">pickup</span>(x,y)
+
+<span class="hljs-comment">/*下面鼠标或触屏事件</span>
+<span class="hljs-comment"> * 如果要使用这个事件需要Scene._mouse_message_used=true以及物体自己的this.forbidMessage=false;</span>
+<span class="hljs-comment"> *virtual</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">mousePressedEvent</span>(x,y)
+<span class="hljs-title function_">mouseMoveEvent</span>(x,y)
+<span class="hljs-title function_">mouseReleasedEvent</span>(x,y)
+
+
+<span class="hljs-comment">/*每个控件都有但不在这个类中</span>
+<span class="hljs-comment"> *每个控件实现方式都不一样，调整过后仍然以中心为原点</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">setSize</span>(w,h)</code></pre>
+
+<h1>WindowBase</h1>
+
+<p>继承: Window_Base</p>
+<p>改造了初始化方式以及_refreshContents刷新方式，使得它可以随时调整大小和移到位置</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">/*以对象方式调用WindowBase的绘图方式*/</span>
+<span class="hljs-title function_">appendElements</span>(...)
+               
+<span class="hljs-comment">/*将通过上述方法添加的元素绘到自己的context上(显示)*/</span>
+<span class="hljs-title function_">refreshElement</span>()
+
+
+<span class="hljs-comment">///使用样例</span>
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">this.object=new hjdd.WindowBase();</span>
+<span class="hljs-comment">this.addObject(this.object);//添加到Scene中</span>
+<span class="hljs-comment">this.object.moveSelf(100,100)</span>
+<span class="hljs-comment">this.object.rotation=0.15;</span>
+<span class="hljs-comment">this.object.setSize(300,300);</span>
+<span class="hljs-comment">this.object.appendElements(new hjdd.TextElement(0,0,&quot;text\\V[1]\\I[\\V[2]]\n...&quot;),</span>
+<span class="hljs-comment">new hjdd.ImageElement(0,0,360,360,0,0,360,360,&#x27;img/pictures/&#x27;,&#x27;saber&#x27;));</span>
+<span class="hljs-comment">this.object.refreshElement();//显示上面添加的element</span>
+<span class="hljs-comment">*/</span></code></pre>
+
+<h1>Sprite</h1>
+
+<p>继承: PIXI.Sprite</p>
+<p>保留了直接调整width和height呈现的缩放功能，实现了一种延迟调整方式应对使用ImageManager加载新图片需要提前预存的问题，使得它可以不会因为调用ImageManager.loadBitmap()没加载好而使得调用的其他调整函数(如moveSelf，setFrame等)被弃置或错误响应</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">/*选择原图的某个区域来显示，</span>
+<span class="hljs-comment">*它会等到bitmap加载完再调用</span>
+<span class="hljs-comment">*如果bitmap已经完成，那么以后都会是立即调用</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">setFrame</span>(x,y,width,height);
+
+<span class="hljs-comment">///使用样例</span>
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">this.object=new hjdd.Sprite();</span>
+<span class="hljs-comment">this.addObject(this.object);//添加到Scene中</span>
+<span class="hljs-comment">this.object.moveSelf(100,100)</span>
+<span class="hljs-comment">this.object.rotation=0.15;</span>
+<span class="hljs-comment">this.object.setSize(300,300);</span>
+<span class="hljs-comment">this.object.bitmap=ImageManager.loadBitmap(&#x27;img/pictures/&#x27;,&#x27;saber&#x27;,null,false);</span>
+<span class="hljs-comment">this.object.setFrame(0,0,360,360);//注意，如果不调用这个默认会以原图(0，0，0，0)显示，就是什么都不</span>
+<span class="hljs-comment">								  //显示</span>
+<span class="hljs-comment">*/</span>
+</code></pre>
+
+<h1>Text</h1>
+
+<p>继承: PIXI.Sprite</p>
+<p>独立的文字，这个控件只解析C、V、I、{、}</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">/*预先设置文字，该函数会先解析文字以如下形式存起来</span>
+<span class="hljs-comment">* &#123;</span>
+<span class="hljs-comment">*	&#123;</span>
+<span class="hljs-comment">*		_data:null,</span>
+<span class="hljs-comment">* 		_type:&#x27;text&#x27;,&#x27;variable&#x27;,&#x27;icon&#x27;,&#x27;fontsize&#x27;,&#x27;color&#x27;</span>
+<span class="hljs-comment">*		_count:0</span>
+<span class="hljs-comment">* 	&#125;</span>
+<span class="hljs-comment">*	几个值含意说明格式_type;_data;_count</span>
+<span class="hljs-comment">*   _&#x27;text&#x27;;一段文字;_count无效</span>
+<span class="hljs-comment">*	&#x27;variavle&#x27;;为最深层数值;表示解析几次可以得到直接解析结果</span>
+<span class="hljs-comment">*	(如\\V[\\V[\\V[123]]],_data=123,_count=2,需要解析为\\V[直接解析结果]，因为Text绘制的时候</span>
+<span class="hljs-comment">*	还会解析最后一次)</span>
+<span class="hljs-comment">*	&#x27;icon&#x27;;最深层数值;表示解析几次可以得到直接解析结果</span>
+<span class="hljs-comment">*	&#x27;color&#x27;;最深层数值;表示解析几次可以得到直接解析结果</span>
+<span class="hljs-comment">*	&#x27;fontsize&#x27;;-12或12；无效</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-title function_">setText</span>(text)
+
+<span class="hljs-comment">/*显示上面设置的字符串*/</span>
+<span class="hljs-title function_">displayLinesText</span>(x,y)
+
+<span class="hljs-comment">///使用样例</span>
+<span class="hljs-comment">/*</span>
+<span class="hljs-comment">this.object=new hjdd.Text();</span>
+<span class="hljs-comment">this.addObject(this.object);//添加到Scene中</span>
+<span class="hljs-comment">this.object.moveSelf(100,100)</span>
+<span class="hljs-comment">this.object.rotation=0.15;</span>
+<span class="hljs-comment">this.object.setSize(300,300);//这个可以将该控件自身坐标系原点定在(150,150)虽然没什么用</span>
+<span class="hljs-comment">this.object.setText(&quot;hell\\V[\\V[123]]o\\C[\\V[\\V[123]]] w\\&#123;olr\\&#125;d!!!&quot;);</span>
+<span class="hljs-comment">this.object.displayLinesText();</span>
+<span class="hljs-comment">*/</span></code></pre>
+
+<p>其它正在完善….</p>
+    </div>
+</div>
+                <div class="article-index-area col-sm-2">
+    <div>
+        <h4>文章简介</h4>
+        <ul class="navbar-nav">
+        </ul>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</body>
+</html>
