@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjdd's Party</title>
+    <link rel="icon" href="/assert/img/group_ico.jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/extend/highlight/atom-one-dark.css">
+    <link rel="stylesheet" href="/extend/bootstrap-4.4.1/css/bootstrap.min.css">
+    
+    <script src="/extend/highlight/highlight.min.js"></script>
+    <script src="/extend/jQuery/jquery-3.7.1.min.js"></script>
+    <script src="/extend/jQuery/jquery.pjax.js"></script>
+    <script src="/extend/bootstrap-4.4.1/js/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/sider.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/sider.js"></script>
+    
+    <style>
+        html{
+            scroll-padding-top: 60px;
+        }
+        body::-webkit-scrollbar{
+            display: none;
+        }
+        a{
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+    </style>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <header class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#ChapterCatelog">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <span class="navbar-brand">Hjdd'sParty</span>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarHeader">
+            <i class="bi bi-caret-down-square-fill"></i>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarHeader">
+            <lu class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">主页</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">学习分类</a>
+                    <ul class="dropdown-menu">
+                        
+                            <a class="dropdown-item" href="/2024/10/02/HexoRecording/%E5%85%B3%E4%BA%8Ehjdd%E4%B8%BB%E9%A2%98%E7%9A%84%E7%AC%94%E8%AE%B0/">hexo笔记</a>
+                        
+                            <a class="dropdown-item" href="/2024/10/06/%E6%97%A5%E5%B8%B8%E6%97%A5%E8%AE%B0/%E7%9B%B8%E4%BC%BC%E7%9F%A9%E9%98%B5/">日常日记</a>
+                        
+                            <a class="dropdown-item" href="/2024/10/04/C++/CQ%E6%97%A5%E8%AE%B0/QtTreePropertyBrowser%E5%8F%8D%E5%B0%84/">C++</a>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/project">个人项目</a>
+                </li>
+            </lu>
+        </div>
+    </header>
+    <div class="container-fluid">
+        
+
+<div class="row">
+    <div class="col-lg-2 d-lg-block navbar-collapse collapse" id="ChapterCatelog" style="background-color: darkgray;">
+        
+<ul>
+    
+</ul>
+
+    </div>
+    <div  id="article-content" class="col-lg-8 col-12" style="height: 100vh;overflow-y: scroll;">
+        <div>
+            <h1>我的主题日记</h1>
+            2024-10-02 10:59:41
+        </div>
+        <div>
+            <h2>1.front-matter自定义参数</h2>
+
+<p><small>注:与posts无关,只与page有关</small></p>
+<pre><code class="hljs javascript">&#123;
+<span class="hljs-comment">/*这个表明page页面中该页面是该项目的第一文件</span>
+<span class="hljs-comment"> *对于一个文件夹</span>
+<span class="hljs-comment"> *--project</span>
+<span class="hljs-comment"> * └-概述</span>
+<span class="hljs-comment"> * |└day01.md</span>
+<span class="hljs-comment"> * └-入门</span>
+<span class="hljs-comment"> * |└day02.md</span>
+<span class="hljs-comment"> * └--进阶</span>
+<span class="hljs-comment"> * |└day03.md</span>
+<span class="hljs-comment"> * └index.md</span>
+<span class="hljs-comment"> * 其中index.md的front-matter中可以加上该参数</span>
+<span class="hljs-comment"> * 加上该参数后project文件夹下除index.md的其他文件会按该文件路径结构排布为抽屉式导航栏</span>
+<span class="hljs-comment"> * 并且点击各部分导航栏链接时不会重新遍历pages再次组织成导航栏而浪费资源</span>
+<span class="hljs-comment"> * 也就是只有第一次进入project的page时会全部加载一遍</span>
+<span class="hljs-comment"> * </span>
+<span class="hljs-comment"> * 2024-10-4 更新</span>
+<span class="hljs-comment"> * 该参数已无任何作用，重新处理了page.ejs的显示逻辑，生成的抽屉式导航栏结构会保存在</span>
+<span class="hljs-comment"> * site._page_catelog中，不管是直接访问还是从主站访问都不会重复加载导航栏</span>
+<span class="hljs-comment"> * posts.ejs的逻辑同理保存变量为site._posts_catelog</span>
+<span class="hljs-comment"> * site._page_catelog&#123;</span>
+<span class="hljs-comment"> *      _path_name: project_page/project_name,</span>
+<span class="hljs-comment"> *      _children:[&#123;</span>
+<span class="hljs-comment"> *          _dir_name:      ,//如果是目录就是目录名，是文件就是文件名 例如</span>
+<span class="hljs-comment"> *                              &#x27;abc/ccc.md&#x27;或者&#x27;abc/ccd/fff.md&#x27;</span>
+<span class="hljs-comment"> *                              先将它们按&#x27;/&#x27;分离,搜索到abc这里就是abc,搜索到ccc.md这里就是ccc.md</span>
+<span class="hljs-comment"> *          _url_path:      ,//只有检索到文件才会有,page.path</span>
+<span class="hljs-comment"> *          _page_title:    ,//同上page.title</span>
+<span class="hljs-comment"> *          _children:[...]  //多个该结构</span>
+<span class="hljs-comment"> *      &#125;,...]</span>
+<span class="hljs-comment"> * &#125;</span>
+<span class="hljs-comment"> * </span>
+<span class="hljs-comment"> * site._posts_catelog&#123;</span>
+<span class="hljs-comment"> *      category_name: category.name,</span>
+<span class="hljs-comment"> *      _children:[&#123;</span>
+<span class="hljs-comment"> *          _name:          ,//同上结构的_dir_name</span>
+<span class="hljs-comment"> *          _path:          ,//post.path</span>
+<span class="hljs-comment"> *          _children:[...] ,//多个该结构</span>
+<span class="hljs-comment"> *      &#125;,...]</span>
+<span class="hljs-comment"> * &#125;</span>
+<span class="hljs-comment"> */</span>
+ <span class="hljs-attr">config</span>:<span class="hljs-literal">true</span>,
+ 
+ <span class="hljs-comment">/*该参数表明该页需要用到的布局 XX.ejs会被page.ejs包含(&amp;lt- include(include_layout) &amp;gt)</span>
+<span class="hljs-comment">  *不写该参数会填入默认布局page_content_main.ejs</span>
+<span class="hljs-comment">  */</span>
+ <span class="hljs-attr">include_layout</span>: ../widget/../<span class="hljs-variable constant_">XX</span>.<span class="hljs-property">ejs</span>
+&#125;</code></pre>
+
+<h2>2.编写markdown的一些注意事项</h2>
+
+<p><small>注:只针对hjdd主题</small></p>
+<h3><b>1.h1标题不要使用#</b></h3>
+使用#的标题在生成html的时候会在标题下面生成a元素并与该标题链接
+主题中对内容的其他链接元素使用css美化时也会应用于该标题生成的链接 
+
+<h3><b>2.front-matter的categories只允许写一种</b></h3>
+<pre><code class="hljs javascript"><span class="hljs-comment">/*该主题的‘学习分类’栏会根据文章的categries的数据进行分类,文件夹直观图</span>
+<span class="hljs-comment">    --source</span>
+<span class="hljs-comment">     └-category1</span>
+<span class="hljs-comment">     |└-directory1</span>
+<span class="hljs-comment">     ||└content.md   //categories: -category1</span>
+<span class="hljs-comment">     |└content1.md   //categories: -category1</span>
+<span class="hljs-comment">     └-category2</span>
+<span class="hljs-comment">      └content.md   //categories: -category2</span>
+<span class="hljs-comment">      └content1.md   //categories: -category2</span>
+<span class="hljs-comment">*/</span></code></pre>
+
+<h3><b>3.项目页结构</b></h3>
+
+<pre><code class="hljs javascript"><span class="hljs-comment">/*文件夹直观图</span>
+<span class="hljs-comment">    --project_page</span>
+<span class="hljs-comment">     └-project1  //项目文件夹下除了index.md以及文件夹外不允许有任何其它文件</span>
+<span class="hljs-comment">     |└-directory1 //可以存放其他文件夹或.md</span>
+<span class="hljs-comment">     ||└...</span>
+<span class="hljs-comment">     |└-directory2 </span>
+<span class="hljs-comment">     |└index.md     //必须,包含title:项目名 date:项目日期 </span>
+<span class="hljs-comment">     └-project1</span>
+<span class="hljs-comment">     |└index.md   //必须</span>
+<span class="hljs-comment">     └index.md		//必须</span>
+<span class="hljs-comment">*/</span></code></pre>
+
+<h2>3.编写markdown的细节</h2>
+
+<p>1.&lt;!–more–&gt;之前的是摘要page.excerpt,之后的是正文page.more</p>
+        </div>
+    </div>
+    <div class="col-lg-2 d-lg-block d-none">
+        <h2>目录</h2>
+<hr/>
+<div id="article-catelog">
+    <ul>
+        
+    </ul>
+</div>
+    </div>
+</div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjdd's Party</title>
+    <link rel="icon" href="/assert/img/group_ico.jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/extend/highlight/atom-one-dark.css">
+    <link rel="stylesheet" href="/extend/bootstrap-4.4.1/css/bootstrap.min.css">
+    
+    <script src="/extend/highlight/highlight.min.js"></script>
+    <script src="/extend/jQuery/jquery-3.7.1.min.js"></script>
+    <script src="/extend/jQuery/jquery.pjax.js"></script>
+    <script src="/extend/bootstrap-4.4.1/js/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/sider.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/sider.js"></script>
+    
+    <style>
+        html{
+            scroll-padding-top: 60px;
+        }
+        body::-webkit-scrollbar{
+            display: none;
+        }
+        a{
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+    </style>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <header class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#ChapterCatelog">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <span class="navbar-brand">Hjdd'sParty</span>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarHeader">
+            <i class="bi bi-caret-down-square-fill"></i>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarHeader">
+            <lu class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">主页</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">学习分类</a>
+                    <ul class="dropdown-menu">
+                        
+                            <a class="dropdown-item" href="/2024/10/02/HexoRecording/%E5%85%B3%E4%BA%8Ehjdd%E4%B8%BB%E9%A2%98%E7%9A%84%E7%AC%94%E8%AE%B0/">hexo笔记</a>
+                        
+                            <a class="dropdown-item" href="/2024/10/06/%E6%97%A5%E5%B8%B8%E6%97%A5%E8%AE%B0/%E7%9B%B8%E4%BC%BC%E7%9F%A9%E9%98%B5/">日常日记</a>
+                        
+                            <a class="dropdown-item" href="/2024/10/04/C++/CQ%E6%97%A5%E8%AE%B0/QtTreePropertyBrowser%E5%8F%8D%E5%B0%84/">C++</a>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/project">个人项目</a>
+                </li>
+            </lu>
+        </div>
+    </header>
+    <div class="container-fluid">
+        
+
+<div class="row">
+    <div class="col-lg-2 d-lg-block navbar-collapse collapse" id="ChapterCatelog" style="background-color: darkgray;">
+        
+<ul>
+    
+    <li>
+        
+<a data-toggle="collapse" href="#PGO0" class="collapsed">C++<span class="arrow"><i class="bi bi-caret-left"></i></span></a>
+<ul class="collapse" id="PGO0">
+    
+    
+        <li>
+            <div>
+                
+<a data-toggle="collapse" href="#PGO1" class="collapsed">CQ日记<span class="arrow"><i class="bi bi-caret-left"></i></span></a>
+<ul class="collapse" id="PGO1">
+    
+    
+        <li>
+            <div>
+                
+<a href="/2024/10/04/C++/CQ%E6%97%A5%E8%AE%B0/QtTreePropertyBrowser%E5%8F%8D%E5%B0%84/">QtTreePropertyBrowser反射</a>
+    
+            </div>
+        </li>
+    
+        <li>
+            <div>
+                
+<a href="/2024/10/04/C++/CQ%E6%97%A5%E8%AE%B0/condition_variable%E7%BB%86%E8%8A%82/">condition_variable细节</a>
+    
+            </div>
+        </li>
+    
+</ul>
+
+            </div>
+        </li>
+    
+</ul>
+
+    </li>
+    
+</ul>
+
+    </div>
+    <div  id="article-content" class="col-lg-8 col-12" style="height: 100vh;overflow-y: scroll;">
+        <div>
+            <h1>QtTreePropertyBrowser的拓展,包含反射</h1>
+            2024-10-04 12:10:04
+        </div>
+        <div>
+            <h2>前言</h2>
+
+<p>本人使用qt5.15.2，让QtTreePropertyBrowser可以识别Q_PROPERTY宏引用的自定义类型，效果如下</p>
+<img src="/assert/img/C++/CQDiary/display.gif" width='100%' alt='GIF Image'/>
+
+<p>主要是自定义了一个可以自己选择图片的控件</p>
+<h2>自定义类注册</h2>
+
+<pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> PIXMAPNODE_H_</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> PIXMAPNODE_H_</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;qmetatype.h&gt;</span></span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">PixmapNode</span>
+&#123;
+	QString _name;
+&#125;;
+<span class="hljs-built_in">Q_DECLARE_METATYPE</span>(PixmapNode)
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">// !PIXMAPNODE_H_</span></span></code></pre>
+
+<p>在QVariant::Type枚举中自定义类通过QVariant::type返回的值全部是QVariant::UserType(1024),</p>
+<p>自定义类的枚举值可以通过qMetaTypeId&lt;T&gt;()和QVariant::userType()获取,比较两个值可以判断是哪一个自定义类。</p>
+<h2>自定义PropertyManager（直接写在文件源码）</h2>
+
+<p>这里定义一个PixmapPropertyManager，然后复制前面内置的类，略微改一下</p>
+<p>关于几个函数的说明:</p>
+<pre><code class="hljs C++"><span class="hljs-comment">/*只在QtVariantProperty::value中调用过，如果创建的QtVariantProperty</span>
+<span class="hljs-comment"> *不使用value函数可以不写这个</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-built_in">value</span>(<span class="hljs-type">const</span> QtProperty*);
+<span class="hljs-comment">/*在对应的自定义工厂slotSetValue槽函数中调用,slotSetValue会与自定义窗口的信号绑定</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-built_in">setValue</span>(QtProperty* property, PixmapNode&amp; val);
+<span class="hljs-comment">/*自己的setValue被调用时触发,并触发工厂类的slotPropertyChanged(会更新自定义窗口相应值)</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-built_in">valueChanged</span>(QtProperty* property, <span class="hljs-type">const</span> PixmapNode&amp; val);
+<span class="hljs-comment">/*QtTreePropertyBrowser相应控件显示的值</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-built_in">valueText</span>(<span class="hljs-type">const</span> QtProperty* property);                
+</code></pre>
+
+<p>后面几行复制就行了</p>
+<pre><code class="hljs C++"><span class="hljs-comment">//qtpropertymanager.h</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapPropertyManagerPrivate</span>;
+ 
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapPropertyManager</span> : <span class="hljs-keyword">public</span> QtAbstractPropertyManager
+&#123;
+    Q_OBJECT
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">PixmapPropertyManager</span>(QObject* parent = <span class="hljs-number">0</span>);
+    ~<span class="hljs-built_in">PixmapPropertyManager</span>();
+    <span class="hljs-function">PixmapNode <span class="hljs-title">value</span><span class="hljs-params">(<span class="hljs-type">const</span> QtProperty* property)</span> <span class="hljs-type">const</span></span>;
+ 
+<span class="hljs-keyword">public</span> Q_SLOTS:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setValue</span><span class="hljs-params">(QtProperty* property, PixmapNode&amp; val)</span></span>;
+Q_SIGNALS:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">valueChanged</span><span class="hljs-params">(QtProperty* property, <span class="hljs-type">const</span> PixmapNode&amp; val)</span></span>;
+<span class="hljs-keyword">protected</span>:
+    <span class="hljs-function">QString <span class="hljs-title">valueText</span><span class="hljs-params">(<span class="hljs-type">const</span> QtProperty* property)</span> <span class="hljs-type">const</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">initializeProperty</span><span class="hljs-params">(QtProperty* property)</span><span class="hljs-keyword">override</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">uninitializeProperty</span><span class="hljs-params">(QtProperty* property)</span><span class="hljs-keyword">override</span></span>;
+<span class="hljs-keyword">private</span>:
+    QScopedPointer&lt;PixmapPropertyManagerPrivate&gt; d_ptr;
+    <span class="hljs-built_in">Q_DECLARE_PRIVATE</span>(PixmapPropertyManager)
+    <span class="hljs-built_in">Q_DISABLE_COPY_MOVE</span>(PixmapPropertyManager)
+&#125;;</code></pre>
+
+<pre><code class="hljs C++"><span class="hljs-comment">//qtpropertymanager.cpp</span>
+ 
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapPropertyManagerPrivate</span>
+&#123;
+    PixmapPropertyManager* q_ptr;
+    <span class="hljs-built_in">Q_DECLARE_PUBLIC</span>(PixmapPropertyManager)
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Data</span>
+    &#123;
+        <span class="hljs-built_in">Data</span>()&#123;&#125;
+        PixmapNode val;
+    &#125;;
+    <span class="hljs-keyword">typedef</span> QMap&lt;<span class="hljs-type">const</span> QtProperty*, Data&gt; PropertyValueMap;
+    QMap&lt;<span class="hljs-type">const</span> QtProperty*, Data&gt; m_values;
+&#125;;
+PixmapPropertyManager::<span class="hljs-built_in">PixmapPropertyManager</span>(QObject* parent)
+    : <span class="hljs-built_in">QtAbstractPropertyManager</span>(parent), <span class="hljs-built_in">d_ptr</span>(<span class="hljs-keyword">new</span> PixmapPropertyManagerPrivate)
+&#123;
+    d_ptr-&gt;q_ptr = <span class="hljs-keyword">this</span>;
+&#125;
+PixmapPropertyManager::~<span class="hljs-built_in">PixmapPropertyManager</span>()
+&#123;
+    <span class="hljs-built_in">clear</span>();
+&#125;
+<span class="hljs-function">PixmapNode <span class="hljs-title">PixmapPropertyManager::value</span><span class="hljs-params">(<span class="hljs-type">const</span> QtProperty* property)</span> <span class="hljs-type">const</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">getValue</span>&lt;PixmapNode&gt;(d_ptr-&gt;m_values, property);
+&#125;
+<span class="hljs-function">QString <span class="hljs-title">PixmapPropertyManager::valueText</span><span class="hljs-params">(<span class="hljs-type">const</span> QtProperty* property)</span> <span class="hljs-type">const</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-type">const</span> PixmapPropertyManagerPrivate::PropertyValueMap::const_iterator it 
+        = d_ptr-&gt;m_values.<span class="hljs-built_in">constFind</span>(property);
+    <span class="hljs-keyword">if</span> (it == d_ptr-&gt;m_values.<span class="hljs-built_in">constEnd</span>())
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">QString</span>();
+    <span class="hljs-keyword">return</span> it.<span class="hljs-built_in">value</span>().val._name+<span class="hljs-string">&quot;.png&quot;</span>;
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapPropertyManager::setValue</span><span class="hljs-params">(QtProperty* property, PixmapNode&amp; val)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-type">const</span> PixmapPropertyManagerPrivate::PropertyValueMap::iterator it 
+        = d_ptr-&gt;m_values.<span class="hljs-built_in">find</span>(property);
+    <span class="hljs-keyword">if</span> (it == d_ptr-&gt;m_values.<span class="hljs-built_in">end</span>())
+        <span class="hljs-keyword">return</span>;
+    PixmapPropertyManagerPrivate::Data data = it.<span class="hljs-built_in">value</span>();
+    <span class="hljs-keyword">if</span> (data.val._name == val._name)
+        <span class="hljs-keyword">return</span>;
+    data.val._name = val._name;
+    it.<span class="hljs-built_in">value</span>() = data;
+    <span class="hljs-function">emit <span class="hljs-title">propertyChanged</span><span class="hljs-params">(property)</span></span>;
+    <span class="hljs-function">emit <span class="hljs-title">valueChanged</span><span class="hljs-params">(property, data.val)</span></span>;
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapPropertyManager::initializeProperty</span><span class="hljs-params">(QtProperty* property)</span></span>
+<span class="hljs-function"></span>&#123;
+    d_ptr-&gt;m_values[property] = PixmapPropertyManagerPrivate::<span class="hljs-built_in">Data</span>();
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapPropertyManager::uninitializeProperty</span><span class="hljs-params">(QtProperty* property)</span></span>
+<span class="hljs-function"></span>&#123;
+    d_ptr-&gt;m_values.<span class="hljs-built_in">remove</span>(property);
+&#125;</code></pre>
+
+<h2>自定义窗口</h2>
+
+<pre><code class="hljs C++"><span class="hljs-comment">//xxx.h</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> PIXMAPSELECTEDWIDGET_H_</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> PIXMAPSELECTEDWIDGET_H_</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;qwidget.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;qlabel.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;qpushbutton.h&gt;</span></span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapSelectedWidget</span> :<span class="hljs-keyword">public</span> QWidget
+&#123;
+	Q_OBJECT
+<span class="hljs-keyword">public</span>:
+	<span class="hljs-built_in">PixmapSelectedWidget</span>(QWidget* parent = <span class="hljs-literal">nullptr</span>);
+	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setValue</span><span class="hljs-params">(<span class="hljs-type">const</span> QString&amp;)</span></span>;
+<span class="hljs-keyword">public</span> slots:
+	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">slot_PixmapChanged</span><span class="hljs-params">()</span></span>;
+signals:
+	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">valueChanged</span><span class="hljs-params">(<span class="hljs-type">const</span> QString&amp;)</span></span>;
+<span class="hljs-keyword">private</span>:
+	QLabel* m_label;
+	QPushButton* m_button;
+&#125;;
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">// !PIXMAPSELECTEDWIDGET_H_</span></span></code></pre>
+
+<pre><code class="hljs C++"><span class="hljs-comment">//xxx.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&quot;PixmapSelectedWidget.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;QHBoxLayout&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;qfiledialog.h&gt;</span></span>
+PixmapSelectedWidget::<span class="hljs-built_in">PixmapSelectedWidget</span>(QWidget* parent)
+    :<span class="hljs-built_in">QWidget</span>(parent),<span class="hljs-built_in">m_label</span>(<span class="hljs-number">0</span>),<span class="hljs-built_in">m_button</span>(<span class="hljs-number">0</span>)
+&#123;
+	QHBoxLayout* layout = <span class="hljs-keyword">new</span> <span class="hljs-built_in">QHBoxLayout</span>(<span class="hljs-keyword">this</span>);
+	layout-&gt;<span class="hljs-built_in">setMargin</span>(<span class="hljs-number">0</span>);
+	m_label = <span class="hljs-keyword">new</span> <span class="hljs-built_in">QLabel</span>(<span class="hljs-string">&quot;.png&quot;</span>, <span class="hljs-keyword">this</span>);
+	m_button = <span class="hljs-keyword">new</span> <span class="hljs-built_in">QPushButton</span>(<span class="hljs-string">&quot;select&quot;</span>, <span class="hljs-keyword">this</span>);
+	m_button-&gt;<span class="hljs-built_in">setFixedWidth</span>(<span class="hljs-number">60</span>);
+	layout-&gt;<span class="hljs-built_in">addWidget</span>(m_label);
+	layout-&gt;<span class="hljs-built_in">addWidget</span>(m_button);
+	<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">setLayout</span>(layout);
+	<span class="hljs-built_in">connect</span>(m_button, 
+            &amp;QPushButton::clicked, 
+            <span class="hljs-keyword">this</span>, 
+            &amp;PixmapSelectedWidget::slot_PixmapChanged);
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapSelectedWidget::setValue</span><span class="hljs-params">(<span class="hljs-type">const</span> QString&amp;name)</span></span>
+<span class="hljs-function"></span>&#123;
+	m_label-&gt;<span class="hljs-built_in">setText</span>(name + <span class="hljs-string">&quot;.png&quot;</span>);
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapSelectedWidget::slot_PixmapChanged</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+	QString path = QFileDialog::<span class="hljs-built_in">getOpenFileName</span>(
+        <span class="hljs-keyword">this</span>, <span class="hljs-string">&quot;selected picture&quot;</span>, 
+        QDir::<span class="hljs-built_in">currentPath</span>(), 
+        <span class="hljs-built_in">QString</span>(<span class="hljs-string">&quot;Image File(*.png)&quot;</span>
+    ));
+	<span class="hljs-keyword">if</span> (path.<span class="hljs-built_in">isEmpty</span>())<span class="hljs-keyword">return</span>;
+	<span class="hljs-type">int</span> last_splitter = path.<span class="hljs-built_in">lastIndexOf</span>(<span class="hljs-string">&#x27;/&#x27;</span>);
+	QString name = path.<span class="hljs-built_in">mid</span>(last_splitter + <span class="hljs-number">1</span>, path.<span class="hljs-built_in">length</span>() - last_splitter - <span class="hljs-number">5</span>);
+	<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">setValue</span>(name);
+	<span class="hljs-function">emit <span class="hljs-title">valueChanged</span><span class="hljs-params">(name)</span></span>;
+&#125;</code></pre>
+
+<p>一个QLabel加一个按钮的控件</p>
+<h2>自定义EditorFactory（写在文件源码）</h2>
+
+<p>该类的特殊设计，槽函数都写在私有类里，通过Q_PRIVATE_SLOT归为公有类</p>
+<p>这里也是对照内置类复制，略改一下就行</p>
+<pre><code class="hljs C++"><span class="hljs-comment">//qeditorfactory.h</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapEditorFactoryPrivate</span>;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapEditorFactory</span> :<span class="hljs-keyword">public</span> QtAbstractEditorFactory&lt;PixmapPropertyManager&gt;
+&#123;
+    Q_OBJECT
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">PixmapEditorFactory</span>(QObject* parent = <span class="hljs-literal">nullptr</span>);
+    ~<span class="hljs-built_in">PixmapEditorFactory</span>();
+<span class="hljs-keyword">protected</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">connectPropertyManager</span><span class="hljs-params">(PixmapPropertyManager* manager)</span><span class="hljs-keyword">override</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> QWidget* <span class="hljs-title">createEditor</span><span class="hljs-params">(PixmapPropertyManager* manager, </span></span>
+<span class="hljs-params"><span class="hljs-function">                                  QtProperty* property, </span></span>
+<span class="hljs-params"><span class="hljs-function">                                  QWidget* parent)</span><span class="hljs-keyword">override</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">disconnectPropertyManager</span><span class="hljs-params">(PixmapPropertyManager* manager)</span><span class="hljs-keyword">override</span></span>;
+<span class="hljs-keyword">private</span>:
+    PixmapNode m_receiver;
+    QScopedPointer&lt;PixmapEditorFactoryPrivate&gt; d_ptr;
+    <span class="hljs-built_in">Q_DECLARE_PRIVATE</span>(PixmapEditorFactory)
+    <span class="hljs-built_in">Q_DISABLE_COPY_MOVE</span>(PixmapEditorFactory)
+    <span class="hljs-built_in">Q_PRIVATE_SLOT</span>(<span class="hljs-built_in">d_func</span>(), <span class="hljs-type">void</span> <span class="hljs-built_in">slotPropertyChanged</span>(QtProperty* property, 
+                                                      <span class="hljs-type">const</span> PixmapNode&amp; value))
+    <span class="hljs-built_in">Q_PRIVATE_SLOT</span>(<span class="hljs-built_in">d_func</span>(), <span class="hljs-type">void</span> <span class="hljs-built_in">slotSetValue</span>(<span class="hljs-type">const</span> QString&amp; value))
+    <span class="hljs-built_in">Q_PRIVATE_SLOT</span>(<span class="hljs-built_in">d_func</span>(), <span class="hljs-type">void</span> <span class="hljs-built_in">slotEditorDestroyed</span>(QObject*))
+&#125;;</code></pre>
+
+<pre><code class="hljs C++"><span class="hljs-comment">//qeditorfactory.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&quot;../PixmapSelectedWidget.h&quot;</span></span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PixmapEditorFactoryPrivate</span> :<span class="hljs-keyword">public</span> EditorFactoryPrivate&lt;PixmapSelectedWidget&gt;
+&#123;
+    PixmapEditorFactory* q_ptr;
+    <span class="hljs-built_in">Q_DECLARE_PUBLIC</span>(PixmapEditorFactory)
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">slotPropertyChanged</span><span class="hljs-params">(QtProperty* property, <span class="hljs-type">const</span> PixmapNode&amp; value)</span></span>;
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">slotSetValue</span><span class="hljs-params">(<span class="hljs-type">const</span> QString&amp; value)</span></span>;
+&#125;;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapEditorFactoryPrivate::slotPropertyChanged</span><span class="hljs-params">(QtProperty* property, <span class="hljs-type">const</span> PixmapNode&amp; value)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> it = m_createdEditors.<span class="hljs-built_in">constFind</span>(property);
+    <span class="hljs-keyword">if</span> (it == m_createdEditors.<span class="hljs-built_in">constEnd</span>())
+        <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">for</span> (PixmapSelectedWidget* editor : it.<span class="hljs-built_in">value</span>()) &#123;
+        editor-&gt;<span class="hljs-built_in">setValue</span>(value._name);
+    &#125;
+&#125; 
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapEditorFactoryPrivate::slotSetValue</span><span class="hljs-params">(<span class="hljs-type">const</span> QString&amp; value)</span></span>
+<span class="hljs-function"></span>&#123;
+    q_ptr-&gt;m_receiver._name = value;
+    QObject* object = q_ptr-&gt;<span class="hljs-built_in">sender</span>();
+    <span class="hljs-type">const</span> QMap&lt;PixmapSelectedWidget*, QtProperty*&gt;::ConstIterator ecend = m_editorToProperty.<span class="hljs-built_in">constEnd</span>();
+    <span class="hljs-keyword">for</span> (QMap&lt;PixmapSelectedWidget*, QtProperty*&gt;::ConstIterator itEditor = m_editorToProperty.<span class="hljs-built_in">constBegin</span>(); itEditor != ecend; ++itEditor)
+        <span class="hljs-keyword">if</span> (itEditor.<span class="hljs-built_in">key</span>() == object) &#123;
+            QtProperty* property = itEditor.<span class="hljs-built_in">value</span>();
+            PixmapPropertyManager* manager = q_ptr-&gt;<span class="hljs-built_in">propertyManager</span>(property);
+            <span class="hljs-keyword">if</span> (!manager)
+                <span class="hljs-keyword">return</span>;
+            manager-&gt;<span class="hljs-built_in">setValue</span>(property, q_ptr-&gt;m_receiver);
+            <span class="hljs-keyword">return</span>;
+        &#125;
+&#125;
+<span class="hljs-comment">//###############</span>
+PixmapEditorFactory::<span class="hljs-built_in">PixmapEditorFactory</span>(QObject* parent)
+    : <span class="hljs-built_in">QtAbstractEditorFactory</span>&lt;PixmapPropertyManager&gt;(parent), <span class="hljs-built_in">d_ptr</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">PixmapEditorFactoryPrivate</span>())
+&#123;
+    d_ptr-&gt;q_ptr = <span class="hljs-keyword">this</span>;
+&#125;
+PixmapEditorFactory::~<span class="hljs-built_in">PixmapEditorFactory</span>()
+&#123;
+    <span class="hljs-built_in">qDeleteAll</span>(d_ptr-&gt;m_editorToProperty.<span class="hljs-built_in">keys</span>());
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapEditorFactory::connectPropertyManager</span><span class="hljs-params">(PixmapPropertyManager* manager)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-built_in">connect</span>(manager, 
+            <span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">valueChanged</span>(QtProperty*, PixmapNode)),
+        	<span class="hljs-keyword">this</span>, 
+            <span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">slotPropertyChanged</span>(QtProperty*, PixmapNode)));
+&#125;
+<span class="hljs-function">QWidget* <span class="hljs-title">PixmapEditorFactory::createEditor</span><span class="hljs-params">(PixmapPropertyManager* manager,</span></span>
+<span class="hljs-params"><span class="hljs-function">    QtProperty* property, QWidget* parent)</span></span>
+<span class="hljs-function"></span>&#123;
+    PixmapSelectedWidget* editor = d_ptr-&gt;<span class="hljs-built_in">createEditor</span>(property, parent);
+    editor-&gt;<span class="hljs-built_in">setValue</span>(manager-&gt;<span class="hljs-built_in">value</span>(property)._name);
+    <span class="hljs-built_in">connect</span>(editor, <span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">valueChanged</span>(QString)),
+        <span class="hljs-keyword">this</span>, <span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">slotSetValue</span>(QString)));
+    <span class="hljs-built_in">connect</span>(editor, <span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">destroyed</span>(QObject*)),
+        <span class="hljs-keyword">this</span>, <span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">slotEditorDestroyed</span>(QObject*)));
+    <span class="hljs-keyword">return</span> editor;
+&#125;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">PixmapEditorFactory::disconnectPropertyManager</span><span class="hljs-params">(PixmapPropertyManager* manager)</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-built_in">disconnect</span>(manager, 
+               <span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">valueChanged</span>(QtProperty*, PixmapNode)),
+        	   <span class="hljs-keyword">this</span>, 
+               <span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">slotPropertyChanged</span>(QtProperty*, PixmapNode)));
+&#125;</code></pre>
+
+<h2>载入QVariantPropertyManager</h2>
+
+<h4><b>公有类中声明设置值槽函数</b></h4>
+
+<p>在qtvariantproperty.h的QtVariantPropertyManager中写如下UserDefine和DefineEnd间的内容</p>
+<img src="/assert/img/C++/CQDiary/QVPM1.png" alt='PNG Image' width='100%'/>
+
+<h4><b>私有类中实现槽</b></h4>
+
+<p>在qtvariantproperty.cpp的QtVariantPropertyManagerPrivate中声明槽</p>
+<img src="/assert/img/C++/CQDiary/QVPM2.png" alt='PNG Image' width='100%' />
+
+<p>实现槽(相关信号触发为源码内容)</p>
+<img src="/assert/img/C++/CQDiary/QVPM3.png" alt='PNG Image' width='100%' />
+
+<h4><b>初始化(QtVariantPropertyManager构造函数中)</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPM4.png" alt='PNG Image' width='100%'/>
+
+<h4><b>QtVariantPropertyManager::setValue</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPM5.png" alt='PNG Image' width='100%'/>
+
+<h3><b>载入QtVariantEditorFactory中</b></h3>
+
+<h4><b>声明自定义工厂变量</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPM6.png" alt='PNG Image' width='100%'/>
+
+<h4><b>初始化(QtVariantEditorFactory构造函数中)</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPM7.png" alt='PNG Image' width='100%' />
+
+<h4><b>QtVariantEditorFactory::connectPropertyManager</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPM8.png" alt='PNG Image' width='100%'/>
+
+<h4><b>QtVariantEditorFactory::disconnectPropertyManager</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPM9.png" alt='PNG Image' width='100%'/>
+
+<h4><b>类中反射声明</b></h4>
+
+<img src="/assert/img/C++/CQDiary/QVPMA.png" alt='PNG Image' width='100%'/>
+
+<p>完成以上，便可使QtVariantPropertyManager::addProperty(metaProperty.userType(),metaProperty.name())</p>
+<p>创建相应属性栏</p>
+        </div>
+    </div>
+    <div class="col-lg-2 d-lg-block d-none">
+        <h2>目录</h2>
+<hr/>
+<div id="article-catelog">
+    <ul>
+        
+    </ul>
+</div>
+    </div>
+</div>
+
+    </div>
+</body>
+</html>

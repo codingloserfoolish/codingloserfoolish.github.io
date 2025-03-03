@@ -1,0 +1,14 @@
+ul{
+    list-style-type: none;
+    padding-left: 0;
+}
+li{
+    padding-left: 0;
+}
+.collapsed .arrow {
+    transform: rotate(-90deg);
+}
+.arrow {
+    float: right;
+    transition: transform 0.3s;
+}
