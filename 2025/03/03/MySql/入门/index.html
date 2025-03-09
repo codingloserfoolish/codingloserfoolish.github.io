@@ -83,26 +83,121 @@
     </div>
     <div  id="article-content" class="col-lg-8 col-12" style="height: 100vh;overflow-y: scroll;">
         <div>
-            <h1>相似矩阵</h1>
-            2024-10-06 16:52:59
+            <h1>MySql基础</h1>
+            2025-03-03 12:02:00
         </div>
         <div>
-            <h1><b>性质</b></h1>
+            <h2>DDL-数据库操作</h2>
 
-<h4><b>相似性质</b></h4>
+<h4>1.查询</h4>
 
-<p>对于n阶矩阵A,B</p>
-<p>若A &#8764; B，</p>
-<p>1.则存在可逆矩阵P，使得P<sup>-1</sup>AP&#x3D;B;</p>
-<p>2.A，B有相同的特征值(&#955;<sub>a1</sub>,…)&#x3D;(&#955;<sub>b1</sub>,…)</p>
-<p>3.&#931;<sup>n</sup><sub>i&#x3D;1</sub>&#955;<sub>ai</sub>&#x3D;&#931;<sup>n</sup><sub>j&#x3D;1</sub>&#955;<sub>bi</sub>&#x3D;&#931;<sup>n</sup><sub>i&#x3D;1</sub>a<sub>ii</sub>&#x3D;&#931;<sup>n</sup><sub>i&#x3D;1</sub>b<sub>ii</sub></p>
-<p>4.|A|&#x3D;|B|&#x3D;&#928;<sup>n</sup><sub>i&#x3D;1</sub>&#955;<sub>i</sub></p>
-<h4>合同性质</h4>
+<pre><code class="hljs mysql">SHOW DATABASES;#查询所有数据库
+SELECT DATABASE();#查询当前数据库</code></pre>
 
-<p>实对称矩阵一定与对角矩阵合同，且变换矩阵为正交矩阵</p>
-<p>若A&#x2243;B，</p>
-<p>1.存在n阶矩阵C使得，C<sup>T</sup>AC&#x3D;B</p>
-<p>2.A，B正负惯性指数相同</p>
+<h4>2.创建</h4>
+
+<pre><code class="hljs mysql">CREATE DATABASE [IF NOT EXISTS] 数据库名 [DEFAULT CHARSET 字符集] [COLLATE 排序规则]
+
+#简写
+CREATE DATABASE 数据库名
+#样例
+CREATE DATABASE IF NOT EXISTS 数据库名 DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci</code></pre>
+
+<p><sub>注:1.utf8mb4_unicode_ci 是基于标准的Unicode来排序和比较，能够在各种语言之间精确排序，不区分大小写</sub></p>
+<p><sub>2.utf8mb4_general_ci 没有实现Unicode排序规则，在遇到某些特殊语言或者字符集，排序结果可能不一致，不区分大小写</sub></p>
+<h4>3.删除</h4>
+
+<pre><code class="hljs mysql">DROP DATABASE [IF EXISTS] 数据库名</code></pre>
+
+<h4>4.使用</h4>
+
+<pre><code class="hljs mysql">USE 数据库名</code></pre>
+
+<h2>DDL-表操作</h2>
+
+<h4>1.查询</h4>
+
+<pre><code class="hljs mysql">SHOW TABLES;#查询当前数据库所有表
+DESC 表名;#查看表结构(表头 字段|类型)
+SHOW CREATE TABLE 表名;#查询创建的表</code></pre>
+
+<h4>2.创建(表头)</h4>
+
+<pre><code class="hljs mysql">CREATE TABLE 表名(
+    字段 字段类型[COMMENT 注释]
+)[COMMENT 注释]
+
+#样例
+CREATE TABLE table1(
+    name varchar(3) comment &quot;xxx&quot;
+) comment &quot;xxx&quot;</code></pre>
+
+<h4>3.修改</h4>
+
+<pre><code class="hljs mysql">ALTER TABLE 表名 ADD 字段名 类型 [COMMENT 注释]#添加字段
+				MODIFY 字段名 数据类型 #改类型
+				CHANGE 旧字段名 新字段名 类型 [COMMENT 注释] #全改
+				DROP 字段名#删除字段
+				RENAME TO 新表名#改表名</code></pre>
+
+<h4>4.删除</h4>
+
+<pre><code class="hljs mysql">DROP TABLE [IF EXISTS] 表名 #删除表
+TRUNCATE TABLE 表名 #清空表(删除后重新创建)</code></pre>
+
+<h2>DML-表数据操作</h2>
+
+<h4>1.插入</h4>
+
+<pre><code class="hljs mysql">INSERT INTO 表名(字段,...) VALUES(值,...);#赋值与字段一一对应
+INSERT INTO 表名 VALUES(值,...);#表头赋值完
+
+INSERT INTO 表名(字段,...) VALUES(值,...),(值,...)#批量插入与字段对应
+INSERT INTO 表名 VALUES(值,...),(值,...)#批量插入与表头对应
+(字段名1,字段名2,...)
+(值1   ,值2    ,...)</code></pre>
+
+<h4>2.修改</h4>
+
+<pre><code class="hljs mysql">UPDATE 表名 SET 字段名1=值1,... [WHERE 条件]</code></pre>
+
+<h4>3.删除</h4>
+
+<pre><code class="hljs mysql">DELETE FROM 表名 [WHERE 条件]</code></pre>
+
+<h2>DQL-表查询</h2>
+
+<pre><code class="hljs mysql">SELECT
+	字段列表
+FROM
+	表名列表
+WHERE
+	条件列表
+GROUP BY
+	分组字段列表
+HAVING
+	分组后条件列表
+ORDER BY
+	排序字段列表(ASC 升序;DESC 降序)
+LIMIT
+	begin_index,length
+	
+#样例
+SELECT 字段1,... FROM 表名,... WHERE 字段 [LIKE &#x27;_%_ad&#x27;]
+LIKE 通配符&#x27;_&#x27;匹配一个字符,&#x27;%&#x27;匹配任意字符
+
+#执行顺序
+FROM-&gt;WHERE-&gt;GROUP BY-&gt;HAVING-&gt;SELECT-&gt;ORDER BY-&gt;LIMIT</code></pre>
+
+<h4>聚和函数</h4>
+
+<pre><code class="hljs mysql">COUNT 统计数量
+MAX 最大值
+MIN 最小值
+AVG 平均值
+SUM 求和
+
+SELECT 函数() from 表名</code></pre>
         </div>
     </div>
     <div class="col-lg-2 d-lg-block d-none">

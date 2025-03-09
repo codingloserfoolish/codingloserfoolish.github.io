@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjdd's Party</title>
+    <link rel="icon" href="/assert/img/group_ico.jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/extend/highlight/atom-one-dark.css">
+    <link rel="stylesheet" href="/extend/bootstrap-4.4.1/css/bootstrap.min.css">
+    
+    <script src="/extend/highlight/highlight.min.js"></script>
+    <script src="/extend/jQuery/jquery-3.7.1.min.js"></script>
+    <script src="/extend/jQuery/jquery.pjax.js"></script>
+    <script src="/extend/bootstrap-4.4.1/js/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/sider.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <script src="/js/main.js"></script>
+    <script src="/js/sider.js"></script>
+    
+    <style>
+        html{
+            scroll-padding-top: 60px;
+        }
+        body::-webkit-scrollbar{
+            display: none;
+        }
+        a{
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+    </style>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <header class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#ChapterCatelog">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <span class="navbar-brand">Hjdd'sParty</span>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarHeader">
+            <i class="bi bi-caret-down-square-fill"></i>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarHeader">
+            <lu class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">主页</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">学习分类</a>
+                    <ul class="dropdown-menu">
+                        
+                            <a class="dropdown-item" href="/2024/10/02/HexoRecording/%E5%85%B3%E4%BA%8Ehjdd%E4%B8%BB%E9%A2%98%E7%9A%84%E7%AC%94%E8%AE%B0/">hexo笔记</a>
+                        
+                            <a class="dropdown-item" href="/2025/03/03/MySql/%E5%85%A5%E9%97%A8/">MySql</a>
+                        
+                            <a class="dropdown-item" href="/2024/10/06/%E6%97%A5%E5%B8%B8%E6%97%A5%E8%AE%B0/%E7%9B%B8%E4%BC%BC%E7%9F%A9%E9%98%B5/">日常日记</a>
+                        
+                            <a class="dropdown-item" href="/2024/10/04/C++/CQ%E6%97%A5%E8%AE%B0/condition_variable%E7%BB%86%E8%8A%82/">C++</a>
+                        
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/project">个人项目</a>
+                </li>
+            </lu>
+        </div>
+    </header>
+    <div class="container-fluid">
+        
+
+<div class="row">
+    <div class="col-lg-2 d-lg-block navbar-collapse collapse" id="ChapterCatelog" style="background-color: darkgray;">
+        
+<ul>
+    
+</ul>
+
+    </div>
+    <div  id="article-content" class="col-lg-8 col-12" style="height: 100vh;overflow-y: scroll;">
+        <div>
+            <h1>javascript下grpc使用</h1>
+            2025-03-09 14:51:00
+        </div>
+        <div>
+            <h2>protobuf介绍</h2>
+
+<pre><code class="hljs protobuf"><span class="hljs-comment">//notice.proto</span>
+syntax=<span class="hljs-string">&quot;proto3&quot;</span>;<span class="hljs-comment">//使用proto3语法</span>
+<span class="hljs-keyword">package</span> notice;<span class="hljs-comment">//类似命名空间,一个proto文件只允许一个package</span>
+<span class="hljs-comment">//message定义结构体</span>
+<span class="hljs-keyword">message </span><span class="hljs-title class_">Request</span>&#123;
+	<span class="hljs-keyword">required</span> <span class="hljs-type">string</span> accout=<span class="hljs-number">1</span>;<span class="hljs-comment">//required表示必须有值,&#x27;=&#x27;表示第几个参数</span>
+	<span class="hljs-type">string</span> password=<span class="hljs-number">2</span>;
+	<span class="hljs-keyword">repeated</span> <span class="hljs-type">int32</span> array=<span class="hljs-number">3</span>;<span class="hljs-comment">//repeated类似数组定义,表示int32[]</span>
+	<span class="hljs-keyword">optional</span> <span class="hljs-type">int32</span> code;<span class="hljs-comment">//optional 表示参数可以为空</span>
+&#125;
+<span class="hljs-keyword">message </span><span class="hljs-title class_">Response</span>&#123;
+	<span class="hljs-type">string</span> name=<span class="hljs-number">1</span>;
+	<span class="hljs-type">int32</span> age=<span class="hljs-number">2</span>;
+	<span class="hljs-keyword">repeated</span> <span class="hljs-type">string</span> accounts=<span class="hljs-number">3</span>;
+&#125;
+
+<span class="hljs-keyword">message </span><span class="hljs-title class_">RequestFile</span>&#123;
+	<span class="hljs-type">string</span> filename=<span class="hljs-number">1</span>;
+&#125;
+<span class="hljs-keyword">message </span><span class="hljs-title class_">ResponseFile</span>&#123;
+	<span class="hljs-type">string</span> content=<span class="hljs-number">1</span>;
+&#125;
+<span class="hljs-comment">//标准类型int32, int64, float, double, bool, string, bytes</span>
+<span class="hljs-comment">//enum类型</span>
+<span class="hljs-keyword">enum </span><span class="hljs-title class_">Option</span>&#123;
+	VALUE1=<span class="hljs-number">0</span>;
+	VALUE2=<span class="hljs-number">1</span>;
+&#125;
+
+
+<span class="hljs-comment">//notice2.proto</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;./notice.proto&quot;</span><span class="hljs-comment">//导入其他proto文件</span>
+
+<span class="hljs-comment">//服务类型</span>
+<span class="hljs-keyword">service </span><span class="hljs-title class_">Greeter</span>&#123;
+	<span class="hljs-function"><span class="hljs-keyword">rpc</span> sayHello (Request) <span class="hljs-keyword">returns</span> (Response)</span>;
+	<span class="hljs-comment">//js中函数声明是function sayHello(call,callback);</span>
+	<span class="hljs-comment">//call.request是上述Request结构</span>
+	<span class="hljs-comment">//callback声明为(err,response)=&gt;&#123;&#125;;response是上述声明Response结构</span>
+&#125;
+
+</code></pre>
+
+<h2>流式rpc</h2>
+
+<h4>客户机流式(发多个收一个)</h4>
+
+<pre><code class="hljs javascript">rpc <span class="hljs-title function_">sayHelloStream</span> (stream <span class="hljs-title class_">RequestFile</span>) <span class="hljs-title function_">returns</span> (<span class="hljs-title class_">ResponseFile</span>);
+<span class="hljs-comment">//stream代表客户机发送多个Request</span>
+<span class="hljs-comment">//上述js服务机代码片段(服务机返回数据不是流式)</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">sayHelloStream</span>(<span class="hljs-params">call,callback</span>)&#123;
+    <span class="hljs-keyword">let</span> data=[];
+    call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">request</span>)=&gt;</span>&#123;
+        data.<span class="hljs-title function_">push</span>(request.<span class="hljs-property">filename</span>);
+    &#125;);
+    call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>,<span class="hljs-function">()=&gt;</span>&#123;
+        <span class="hljs-title function_">callback</span>(<span class="hljs-literal">null</span>,&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">&#x27;其他属性&#x27;</span>&#125;);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;消息已回传&#x27;</span>);
+    &#125;);
+    call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span>&#123;&#125;);
+&#125;
+<span class="hljs-comment">//######################################</span>
+<span class="hljs-comment">//客户机片段(客户机发送数据是流式)</span>
+<span class="hljs-keyword">let</span> call=client.<span class="hljs-title function_">sayHelloStream</span>(<span class="hljs-function">(<span class="hljs-params">err,response</span>)=&gt;</span>&#123;&#125;);
+
+call.<span class="hljs-title function_">write</span>(&#123;<span class="hljs-string">&#x27;Request结构体&#x27;</span>&#125;);
+call.<span class="hljs-title function_">write</span>(&#123;<span class="hljs-string">&#x27;Request结构体&#x27;</span>&#125;);<span class="hljs-comment">//可以多次write,流式发送</span>
+call.<span class="hljs-title function_">end</span>();</code></pre>
+
+<h4>服务机流式(发一个收多个)</h4>
+
+<pre><code class="hljs javascript">rpc <span class="hljs-title function_">sayHelloStream</span> (<span class="hljs-title class_">RequestFile</span>) <span class="hljs-title function_">returns</span> (stream <span class="hljs-title class_">ResponseFile</span>);
+<span class="hljs-comment">//上述js服务机代码片段(服务机返回数据是流式)</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">sayHelloStream</span>(<span class="hljs-params">call</span>)&#123;
+    <span class="hljs-comment">//...一段检测要什么文件</span>
+    <span class="hljs-keyword">const</span> readStream = fs.<span class="hljs-title function_">createReadStream</span>(call.<span class="hljs-property">request</span>.<span class="hljs-property">filename</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>);
+    readStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">data</span>)=&gt;</span>&#123;
+        call.<span class="hljs-title function_">write</span>(&#123;<span class="hljs-attr">content</span>:data&#125;);<span class="hljs-comment">//这里假设了一个Response</span>
+    &#125;);
+    readStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>,<span class="hljs-function">()=&gt;</span>&#123;
+       	<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;读完了&#x27;</span>);
+        call.<span class="hljs-title function_">end</span>();<span class="hljs-comment">//write方写完会启动接收方的end事件</span>
+    &#125;);
+    readStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span>&#123;
+       <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;错了&#x27;</span>);
+    &#125;);
+&#125;
+<span class="hljs-comment">//######################################</span>
+<span class="hljs-comment">//客户机片段(客户机接收数据是流式)</span>
+<span class="hljs-keyword">let</span> call=client.<span class="hljs-title function_">sayHelloStream</span>(&#123;<span class="hljs-attr">filename</span>:<span class="hljs-string">&#x27;xxx文件&#x27;</span>&#125;);
+call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">response</span>)=&gt;</span>&#123;
+    fs.<span class="hljs-title function_">appendFileSync</span>(<span class="hljs-string">&#x27;xxx文件&#x27;</span>,response.<span class="hljs-property">content</span>,<span class="hljs-string">&#x27;utf-8&#x27;</span>);
+&#125;);
+call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>,<span class="hljs-function">()=&gt;</span>&#123;
+    <span class="hljs-comment">//读完了</span>
+&#125;);
+call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span>&#123;<span class="hljs-comment">//错了</span>
+&#125;);
+</code></pre>
+
+<h4>双流式(多发多收)</h4>
+
+<pre><code class="hljs javascript">rpc <span class="hljs-title function_">sayHelloStream</span> (<span class="hljs-title class_">RequestFile</span>) <span class="hljs-title function_">returns</span> (stream <span class="hljs-title class_">ResponseFile</span>);
+<span class="hljs-comment">//上述js服务机代码片段(服务机返回数据是流式)</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">sayHelloStream</span>(<span class="hljs-params">call</span>)&#123;
+    call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">request</span>)=&gt;</span>&#123;
+        <span class="hljs-keyword">const</span> readStream = fs.<span class="hljs-title function_">createReadStream</span>(call.<span class="hljs-property">request</span>.<span class="hljs-property">filename</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>);
+        readStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">data</span>)=&gt;</span>&#123;
+        	call.<span class="hljs-title function_">write</span>(&#123;<span class="hljs-attr">content</span>:data&#125;);
+    	&#125;);
+        readStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>,<span class="hljs-function">()=&gt;</span>&#123;
+       		<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;读完了&#x27;</span>);
+            call.<span class="hljs-title function_">end</span>();
+    	&#125;);
+        readStream.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span>&#123;
+           <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;错了&#x27;</span>);
+        &#125;);
+    &#125;);
+    call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>,<span class="hljs-function">()=&gt;</span>&#123;
+        call.<span class="hljs-title function_">end</span>();
+    &#125;);
+    call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span>&#123;
+        
+    &#125;);
+&#125;
+<span class="hljs-comment">//######################################</span>
+<span class="hljs-comment">//客户机片段(客户机接收数据是流式)</span>
+<span class="hljs-keyword">let</span> call=client.<span class="hljs-title function_">sayHelloStream</span>();
+call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">response</span>)=&gt;</span>&#123;
+    fs.<span class="hljs-title function_">appendFileSync</span>(<span class="hljs-string">&#x27;xxx文件&#x27;</span>,response.<span class="hljs-property">content</span>,<span class="hljs-string">&#x27;utf-8&#x27;</span>);
+&#125;);
+call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;end&#x27;</span>,<span class="hljs-function">()=&gt;</span>&#123;
+    <span class="hljs-comment">//读完了</span>
+&#125;);
+call.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span>&#123;<span class="hljs-comment">//错了</span>
+&#125;);
+call.<span class="hljs-title function_">write</span>(&#123;<span class="hljs-attr">filename</span>:<span class="hljs-string">&#x27;xxx&#x27;</span>&#125;);
+call.<span class="hljs-title function_">write</span>(&#123;<span class="hljs-attr">filename</span>:<span class="hljs-string">&#x27;xxx2&#x27;</span>&#125;);
+call.<span class="hljs-title function_">end</span>();</code></pre>
+
+<h2>Js grpc的使用</h2>
+
+<h4>解析proto文件</h4>
+
+<pre><code class="hljs javascript"><span class="hljs-comment">//导入模块@grpc/grpc-js、@grpc/proto-loader</span>
+<span class="hljs-keyword">const</span> grpc=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@grpc/grpc-js&#x27;</span>);
+<span class="hljs-keyword">const</span> protoloader=<span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;@grpc/proto-loader&quot;</span>);
+
+<span class="hljs-comment">//导入文件</span>
+<span class="hljs-keyword">const</span> packageDefinition = protoloader.<span class="hljs-title function_">loadSync</span>(<span class="hljs-string">&#x27;文件.proto&#x27;</span>,&#123;
+    <span class="hljs-attr">keepCase</span>:<span class="hljs-literal">true</span>,<span class="hljs-comment">//保持.proto中字段名原样，否则用驼峰式</span>
+    <span class="hljs-attr">longs</span>: <span class="hljs-title class_">String</span>,<span class="hljs-comment">//如何处理int64或uint64</span>
+    <span class="hljs-attr">enums</span>: <span class="hljs-title class_">String</span>,<span class="hljs-comment">//如何处理枚举类型</span>
+    <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span>,<span class="hljs-comment">//是否给字段默认值</span>
+    <span class="hljs-attr">oneofs</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-comment">/*</span>
+<span class="hljs-comment">    * message xxx&#123;</span>
+<span class="hljs-comment">    * oneofs xxx2&#123;</span>
+<span class="hljs-comment">    *	int32 a=1;</span>
+<span class="hljs-comment">    * &#125;</span>
+<span class="hljs-comment">    * &#125;</span>
+<span class="hljs-comment">    * true 解析为&#123;xxx2:&#123;a:0&#125;&#125;</span>
+<span class="hljs-comment">    * false 解析为&#123;a:0&#125;</span>
+<span class="hljs-comment">    */</span>
+    
+    <span class="hljs-attr">includeDirs</span>:[<span class="hljs-string">&#x27;路径1&#x27;</span>,<span class="hljs-string">&#x27;路径2&#x27;</span>]，<span class="hljs-comment">//指定proto文件搜索路径</span>
+    <span class="hljs-attr">array</span>: <span class="hljs-literal">true</span>,<span class="hljs-comment">//true给repeated字段强制生产数组(只有一个值也是数组)</span>
+    <span class="hljs-attr">json</span>:<span class="hljs-literal">true</span><span class="hljs-comment">//将message解析为json格式</span>
+&#125;);
+
+<span class="hljs-comment">//导入package</span>
+<span class="hljs-keyword">const</span> package=grpc.<span class="hljs-title function_">loadPackageDefinition</span>(packageDefinition).包名;
+<span class="hljs-comment">//#######################################################################</span>
+<span class="hljs-comment">//实现函数,上节介绍过流式实现</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">SayHello</span>(<span class="hljs-params">call,callback</span>)&#123;
+    
+&#125;
+<span class="hljs-comment">//服务定义server.js</span>
+<span class="hljs-keyword">let</span> server=<span class="hljs-keyword">new</span> grpc.<span class="hljs-title class_">Server</span>();
+server.<span class="hljs-title function_">addService</span>(package.服务名.<span class="hljs-property">service</span>,&#123;
+    <span class="hljs-comment">//函数实现,比如sayHello:sayHello</span>
+&#125;);<span class="hljs-comment">//服务名就是proto中有service关键字定义的东西</span>
+
+<span class="hljs-comment">//启动服务</span>
+server.<span class="hljs-title function_">bindAsync</span>(
+    <span class="hljs-string">&quot;0.0.0.0:50051&quot;</span>,<span class="hljs-comment">//服务端监听所有网络接口</span>
+    grpc.<span class="hljs-property">ServerCredentials</span>.<span class="hljs-title function_">createInsecure</span>(),<span class="hljs-comment">//安全验证</span>
+    <span class="hljs-function">()=&gt;</span>&#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;服务启动&quot;</span>)
+    &#125;<span class="hljs-comment">//服务启动后回调</span>
+);
+<span class="hljs-comment">//#####################################################################</span>
+<span class="hljs-comment">//客户机直接调用</span>
+<span class="hljs-keyword">let</span> client=<span class="hljs-keyword">new</span> package.服务名(
+    <span class="hljs-string">&#x27;服务机IP:端口&#x27;</span>,
+    grpc.<span class="hljs-property">credentials</span>.<span class="hljs-title function_">createInsecure</span>()<span class="hljs-comment">//安全验证</span>
+);
+client.<span class="hljs-title function_">sayHello</span>(&#123;<span class="hljs-string">&#x27;request结构&#x27;</span>&#125;,<span class="hljs-function">(<span class="hljs-params">err,reaponse</span>)=&gt;</span>&#123;&#125;);<span class="hljs-comment">//本地调用远程接口</span>
+</code></pre>
+
+<p>以上就是基本使用</p>
+        </div>
+    </div>
+    <div class="col-lg-2 d-lg-block d-none">
+        <h2>目录</h2>
+<hr/>
+<div id="article-catelog">
+    <ul>
+    </ul>
+</div>
+    </div>
+</div>
+
+    </div>
+</body>
+</html>
